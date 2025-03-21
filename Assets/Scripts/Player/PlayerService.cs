@@ -106,11 +106,11 @@ namespace Command.Player
 
         public void SetUnitReference(UnitCommand commandToProcess)
         {
-            var actorunit = GetPlayerById(commandToProcess.commandData.ActorPlayerID).GetUnitByID(commandToProcess.commandData.ActorUnitID);
-            var targetunit = GetPlayerById(commandToProcess.commandData.TargetPlayerID).GetUnitByID(commandToProcess.commandData.TargetUnitID);
+            var actorUnit = GetPlayerById(commandToProcess.commandData.ActorPlayerID).GetUnitByID(commandToProcess.commandData.ActorUnitID);
+            var targetUnit = GetPlayerById(commandToProcess.commandData.TargetPlayerID).GetUnitByID(commandToProcess.commandData.TargetUnitID);
 
-            commandToProcess.setActorUnit(actorunit);
-            commandToProcess.setTargetUnit(targetunit);
+            commandToProcess.setActorUnit(actorUnit);
+            commandToProcess.setTargetUnit(targetUnit);
         }
     }
 }

@@ -23,6 +23,15 @@ namespace Commands
         {
             GameService.Instance.ActionService.GetActionByType(CommandType.Heal).PerformAction(actorUnit,targetUnit,hitTargert);
         }
+
+        public override void Undo()
+        {
+            if (hitTargert)
+            {
+                targetUnit.TakeDamage(actorUnit.CurrentPower);
+                actorUnit.Owner.ResetCurrentActiveUnit();
+            }
+        }
     }
 }
 

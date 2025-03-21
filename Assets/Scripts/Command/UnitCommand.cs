@@ -31,6 +31,8 @@ namespace Commands
         public abstract void Execute();
         public abstract bool WillHitTarget();
 
+        public abstract void Undo();
+
         public void setActorUnit(UnitController actorUnit)
         {
             this.actorUnit = actorUnit;

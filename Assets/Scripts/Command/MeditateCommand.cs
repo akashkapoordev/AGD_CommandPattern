@@ -9,6 +9,7 @@ namespace Commands
     public class MeditateCommand : UnitCommand
     {
         private bool hitTargert;
+        private int previousMaxHealth;
 
         public MeditateCommand(CommandData commandData)
         {
@@ -21,7 +22,19 @@ namespace Commands
 
         public override void Execute()
         {
+            previousMaxHealth = targetUnit.CurrentMaxHealth;
             GameService.Instance.ActionService.GetActionByType(CommandType.Meditate).PerformAction(actorUnit,targetUnit,hitTargert);
+        }
+
+        public override void Undo()
+        {
+            if (hitTargert)
+            {
+                var healthToReduce = targetUnit.CurrentMaxHealth - previousMaxHealth;
+                targetUnit.CurrentMaxHealth = previousMaxHealth;
+                targetUnit.TakeDamage(healthToReduce);
+            }
+            actorUnit.Owner.ResetCurrentActiveUnit();
         }
     }
 }

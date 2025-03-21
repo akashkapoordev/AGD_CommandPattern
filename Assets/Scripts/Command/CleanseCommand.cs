@@ -9,6 +9,7 @@ namespace Commands
     public class CleanseCommand : UnitCommand
     {
         private bool hitTargert;
+        private int previousPower;
 
         public CleanseCommand(CommandData commandData)
         {
@@ -21,7 +22,16 @@ namespace Commands
 
         public override void Execute()
         {
+            previousPower = targetUnit.CurrentPower;
             GameService.Instance.ActionService.GetActionByType(CommandType.Cleanse).PerformAction(actorUnit,targetUnit,hitTargert);
+        }
+
+        public override void Undo()
+        {
+            if (hitTargert)
+                targetUnit.CurrentPower = previousPower;
+
+            actorUnit.Owner.ResetCurrentActiveUnit();
         }
     }
 }

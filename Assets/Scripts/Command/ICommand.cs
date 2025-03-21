@@ -6,7 +6,9 @@ namespace Commands
 {
     public interface ICommand
     {
-        void Execute();
+        public void Execute();
+
+        public void Undo();
     }
 
 }

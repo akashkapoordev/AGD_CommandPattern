@@ -1,3 +1,4 @@
+using Command.Main;
 using Commands;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,18 @@ namespace Commands
         {
             ExecuteCommand(command);
             RegisterCommand(command);
+        }
+
+        public void Undo()
+        {
+            if (!RegistryEmpty() && CommandBelongsToActivePlayer())
+                commandRegistry.Pop().Undo();
+        }
+        private bool RegistryEmpty() => commandRegistry.Count == 0;
+
+        private bool CommandBelongsToActivePlayer()
+        {
+            return (commandRegistry.Peek() as UnitCommand).commandData.ActorPlayerID == GameService.Instance.PlayerService.ActivePlayerID;
         }
     }
 }

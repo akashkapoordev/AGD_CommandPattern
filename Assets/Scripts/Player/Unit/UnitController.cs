@@ -4,6 +4,8 @@ using Command.Actions;
 using System.Collections;
 using System;
 using Object = UnityEngine.Object;
+using System.Windows.Input;
+using Commands;
 
 namespace Command.Player
 {
@@ -91,19 +93,19 @@ namespace Command.Player
             unitView.PlayAnimation(UnitAnimations.DEATH);
         }
 
-        public void PlayBattleAnimation(ActionType actionType, Vector3 battlePosition, Action callback)
+        public void PlayBattleAnimation(CommandType actionType, Vector3 battlePosition, Action callback)
         {
             GameService.Instance.UIService.ResetBattleBackgroundOverlay();
             MoveToBattlePosition(battlePosition, callback, true, actionType);
         }
 
-        private void MoveToBattlePosition(Vector3 battlePosition, Action callback = null,  bool shouldPlayActionAnimation = true, ActionType actionTypeToExecute = ActionType.None)
+        private void MoveToBattlePosition(Vector3 battlePosition, Action callback = null,  bool shouldPlayActionAnimation = true, CommandType actionTypeToExecute = CommandType.None)
         {
             float moveTime = Vector3.Distance(unitView.transform.position, battlePosition) / unitScriptableObject.MovementSpeed;
             unitView.StartCoroutine(MoveToPositionOverTime(battlePosition, moveTime, callback, shouldPlayActionAnimation, actionTypeToExecute));
         }
 
-        private IEnumerator MoveToPositionOverTime(Vector3 targetPosition, float time, Action callback, bool shouldPlayActionAnimation, ActionType actionTypeToExecute)
+        private IEnumerator MoveToPositionOverTime(Vector3 targetPosition, float time, Action callback, bool shouldPlayActionAnimation, CommandType actionTypeToExecute)
         {
             float elapsedTime = 0;
             Vector3 startingPosition = unitView.transform.position;
@@ -124,9 +126,9 @@ namespace Command.Player
                 callback.Invoke();
         }
 
-        private void PlayActionAnimation(ActionType actionType)
+        private void PlayActionAnimation(CommandType actionType)
         {
-            if (actionType == ActionType.None)
+            if (actionType == CommandType.None)
                 return;
             
             if (actionType == unitScriptableObject.executableCommands[0])
@@ -159,6 +161,12 @@ namespace Command.Player
                 return unitView.transform.position + unitScriptableObject.EnemyBattlePositionOffset;
             else
                 return unitView.transform.position - unitScriptableObject.EnemyBattlePositionOffset;
+        }
+
+
+        public void ProcessUnitCommand(UnitCommand commandToProcess)
+        {
+            GameService.Instance.CommandInvoker.ProcessCommand(commandToProcess);
         }
     }
 

@@ -9,21 +9,23 @@ namespace Command.Actions
     {
         private UnitController actorUnit;
         private UnitController targetUnit;
+        private bool IsSuccessful;
         public TargetType TargetType => TargetType.Self;
 
-        public void PerformAction(UnitController actorUnit, UnitController targetUnit)
+        public void PerformAction(UnitController actorUnit, UnitController targetUnit, bool IsSuccessful)
         {
             this.actorUnit = actorUnit;
             this.targetUnit = targetUnit;
+            this.IsSuccessful = IsSuccessful;
 
-            actorUnit.PlayBattleAnimation(ActionType.Meditate, CalculateMovePosition(targetUnit), OnActionAnimationCompleted);
+            actorUnit.PlayBattleAnimation(CommandType.Meditate, CalculateMovePosition(targetUnit), OnActionAnimationCompleted);
         }
 
         public void OnActionAnimationCompleted()
         {
             GameService.Instance.SoundService.PlaySoundEffects(Sound.SoundType.MEDITATE);
 
-            if (IsSuccessful())
+            if (IsSuccessful)
             {
                 var healthToIncrease = (int)(targetUnit.CurrentMaxHealth * 0.2f);
                 targetUnit.CurrentMaxHealth += healthToIncrease;
@@ -33,7 +35,6 @@ namespace Command.Actions
                 GameService.Instance.UIService.ActionMissed();
         }
 
-        public bool IsSuccessful() => true;
 
         public Vector3 CalculateMovePosition(UnitController targetUnit) => targetUnit.GetEnemyPosition();
     }

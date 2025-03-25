@@ -9,6 +9,18 @@ namespace Commands
 {
     public class CommandInvoker
     {
+
+
+        public CommandInvoker()
+        {
+            SubscribeToEvents();
+        }
+
+        private void SubscribeToEvents()
+        {
+            GameService.Instance.EventService.OnReplayButtonClicked.AddListener(SetReplayStack);
+        }
+
         private Stack<ICommand> commandRegistry = new Stack<ICommand>();
 
         public void ExecuteCommand(ICommand command) => command.Execute();
@@ -31,6 +43,12 @@ namespace Commands
         private bool CommandBelongsToActivePlayer()
         {
             return (commandRegistry.Peek() as UnitCommand).commandData.ActorPlayerID == GameService.Instance.PlayerService.ActivePlayerID;
+        }
+
+        private void SetReplayStack()
+        {
+            GameService.Instance.ReplayService.SetCommandStack(commandRegistry);
+            commandRegistry.Clear();
         }
     }
 }
